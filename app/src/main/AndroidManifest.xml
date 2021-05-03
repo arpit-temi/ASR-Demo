@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.temicanada.asrdemo">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/SkillTheme">
+
+
+         <!--If you want to cover the voice flow in Launcher OS,
+         please add following meta-data to AndroidManifest.xml.
+        -->
+         <meta-data
+             android:name="com.robotemi.sdk.metadata.KIOSK"
+             android:value="true" />
+
+         <meta-data
+             android:name="com.robotemi.sdk.metadata.OVERRIDE_NLU"
+             android:value="true" />
+       <!-- And also need to select this App as the Kiosk Mode App in Settings > App > Kiosk.
+         @param asrResult The result of the ASR after waking up temi.-->
+
+
+<!--        displays your app in temi OS's application selection  -->
+        <meta-data
+            android:name="com.robotemi.sdk.metadata.SKILL"
+            android:value="@string/app_name" />
+
+<!--        specifies which NLP intents to listen for  -->
+        <meta-data
+            android:name="com.robotemi.sdk.metadata.ACTIONS"
+            android:value=
+                "open.registration,
+               open.timetable,
+               open.schedule" />
+
+
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

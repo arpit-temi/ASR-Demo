@@ -7,6 +7,8 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.webkit.WebView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -26,7 +28,6 @@ import java.util.*
 import java.util.logging.Handler
 import kotlin.collections.ArrayList
 
-
 class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListener,
     Robot.NlpListener {
 
@@ -38,8 +39,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
     private lateinit var robot: Robot
     private lateinit var webBrowser: WebView
     private val ACTION_OPEN_UOF = "open.uof"
-    val questionList: ArrayList<String> = ArrayList()
-    val answerList: ArrayList<String> = ArrayList()
+
 
     var questionAnswerList = mutableMapOf<String, String>()
 
@@ -60,6 +60,8 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val myAnim: Animation = AnimationUtils.loadAnimation(this, R.anim.bounce)
 
         webBrowser = findViewById(R.id.webView)
 //        var back: Button = findViewById(R.id.button)
@@ -82,9 +84,10 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
 
         val fab: View = findViewById(R.id.refresh)
         fab.setOnClickListener {
-
+            fab.startAnimation(myAnim)
             callAPi()
         }
+
 
         callAPi()
 
@@ -152,7 +155,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
         }
 
         questionAnswerList.forEach { (k, v) ->
-            if (k.equals(asrResult, ignoreCase = true)) {
+            if (k.trim().equals(asrResult, ignoreCase = true)) {
                 println("Test: $k = $v")
                 temiSpeak(v)
             }
@@ -269,7 +272,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
     }
 
 
-    fun callAPi(){
+    fun callAPi() {
 
         val apiInterface = APIClient.client.create(ApiInterface::class.java)
 
@@ -279,7 +282,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
                 call: Call<QuestionAnswer>,
                 response: Response<QuestionAnswer>
             ) {
-                Log.d("Success!", response.toString())
+//                Log.d("Success!", response.toString())
                 var questionAnswer = response.body()
                 var itemList = questionAnswer?.values
                 questionAnswerList.clear()
@@ -292,7 +295,7 @@ class MainActivity : AppCompatActivity(), OnRobotReadyListener, Robot.AsrListene
                         questionAnswerList[itemList[i][0]] = itemList[i][1]
                     }
 
-                    println("Q/A /n  $questionAnswerList")
+//                    println("Q/A /n  $questionAnswerList")
                 }
             }
 
